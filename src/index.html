@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CarLog - Car deadlines and services</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1 class="app-title">CarLog</h1>
+    <p class="app-description">Keep track of ITP, RCA, road tax and service for your cars.</p>
+    <p class="app-summary">3 items, 2 active</p>
+  </header>
+
+  <main class="container">
+
+    <section class="panel" id="add" aria-labelledby="add-title">
+      <h2 class="section-title" id="add-title">Add a deadline</h2>
+
+      <form class="form" action="#" method="get">
+        <label class="form-label" for="title">Title</label>
+        <input class="form-field" type="text" id="title" name="title" maxlength="100" placeholder="Ex: Renew ITP">
+
+        <label class="form-label" for="car">Car</label>
+        <select class="form-field" id="car" name="car">
+          <option>Dacia Duster</option>
+          <option>Volkswagen Golf</option>
+        </select>
+
+        <label class="form-label" for="type">Type</label>
+        <select class="form-field" id="type" name="type">
+          <option>ITP</option>
+          <option>RCA</option>
+          <option>Road tax</option>
+          <option>Service</option>
+        </select>
+
+        <label class="form-label" for="date">Due date</label>
+        <input class="form-field" type="date" id="date" name="date">
+
+        <button class="button" type="submit">Add deadline</button>
+      </form>
+    </section>
+
+    <!-- List panel: the 3 sample items from the README -->
+    <section class="panel" id="list" aria-labelledby="list-title">
+      <h2 class="section-title" id="list-title">My deadlines</h2>
+
+      <ul class="card-list">
+
+        <li class="card card-soon">
+          <div class="card-info">
+            <h3 class="card-title">Renew ITP</h3>
+            <span class="badge badge-itp">ITP</span>
+            <p class="card-car">Dacia Duster, B 123 ABC</p>
+            <p class="card-date">Expires on <time datetime="2026-10-15">15 Oct 2026</time></p>
+          </div>
+          <p class="card-days"><span class="days-number">11</span> days left</p>
+        </li>
+
+        <li class="card card-done">
+          <div class="card-info">
+            <h3 class="card-title">Oil change</h3>
+            <span class="badge badge-service">Service</span>
+            <p class="card-car">Dacia Duster, B 123 ABC</p>
+            <p class="card-date">Done, planned for <time datetime="2026-12-10">10 Dec 2026</time></p>
+          </div>
+          <p class="card-days"><span class="days-number">Done</span></p>
+        </li>
+
+        <li class="card card-ok">
+          <div class="card-info">
+            <h3 class="card-title">Renew RCA</h3>
+            <span class="badge badge-rca">RCA</span>
+            <p class="card-car">Volkswagen Golf, CJ 45 XYZ</p>
+            <p class="card-date">Expires on <time datetime="2026-11-05">5 Nov 2026</time></p>
+          </div>
+          <p class="card-days"><span class="days-number">32</span> days left</p>
+        </li>
+
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="app-nav" aria-label="Main">
+      <a class="nav-link" href="#list">Deadlines</a>
+      <a class="nav-link" href="#add">Add</a>
+    </nav>
+    <p class="footer-note">CarLog, Web Technologies project, stage 1</p>
+  </footer>
+
+</body>
+</html>

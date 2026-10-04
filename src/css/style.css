@@ -1,0 +1,485 @@
+:root {
+  /* Surfaces: deep midnight, each layer a step lighter */
+  --color-bg: #05070d;
+  --color-surface: #0b101b;
+  --color-surface-raised: #131a29;
+  --color-border: #1e2840;
+  --color-border-strong: #2d3a5a;
+
+  /* Text */
+  --color-text: #eef2fc;
+  --color-text-muted: #8d99b8;
+
+  /* Accent */
+  --color-accent: #6aa8ff;
+  --color-accent-strong: #93c0ff;
+  --color-on-accent: #04101f;
+  --color-focus: #b8d4ff;
+  --color-glow: rgb(106 168 255 / 0.12);
+  --color-glow-focus: rgb(106 168 255 / 0.18);
+
+  /* Status */
+  --color-ok: #4fd69c;
+  --color-soon: #f6bb4f;
+  --color-overdue: #ff6f7d;
+
+  /* Type badges */
+  --color-on-badge: #060a14;
+  --color-badge-itp: #6aa8ff;
+  --color-badge-rca: #c4a1ff;
+  --color-badge-road-tax: #f6bb4f;
+  --color-badge-service: #4fd69c;
+
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 18px 40px -18px rgb(0 0 0 / 0.9);
+  --shadow-bar: 0 -10px 30px rgb(0 0 0 / 0.5);
+
+  --radius-sm: 0.75rem;
+  --radius-lg: 1.5rem;
+
+  --content-width: 72rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(60rem 30rem at 50% -10rem, var(--color-glow), transparent 70%),    var(--color-bg);
+  background-repeat: no-repeat;
+  color: var(--color-text);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  /* room for the bottom bar */
+  padding-bottom: 8rem;
+}
+
+/* ---------- Header ---------- */
+
+.app-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 0.5rem;
+}
+
+.app-title {
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--color-text);
+}
+
+.app-description,
+.app-summary {
+  margin: 0;
+  max-width: 38rem;
+  color: var(--color-text-muted);
+}
+
+.app-description {
+  font-size: 1.125rem;
+}
+
+.app-summary {
+  font-size: 0.9375rem;
+}
+
+/* ---------- Layout: two columns (Add a deadline | My deadlines) ---------- */
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.5rem;
+  align-items: stretch;
+  max-width: var(--content-width);
+  margin: 2.5rem auto 0;
+  padding: 0 1.5rem;
+}
+
+.panel {
+  min-width: 0;
+  scroll-margin-top: 1.5rem;
+}
+
+.panel:first-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel:first-child .form {
+  flex: 1;
+}
+
+.section-title {
+  margin: 0 0 1.25rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Deadline cards ---------- */
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  --status: var(--color-ok);
+
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  min-height: 12rem;
+  overflow: hidden;
+  padding: 2.25rem 2rem 2.25rem 2.5rem;
+  background: var(--color-surface);
+  background:
+    radial-gradient(24rem 12rem at 100% 0%, color-mix(in srgb, var(--status) 14%, transparent), transparent 70%),
+    var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.card:hover {
+  border-color: color-mix(in srgb, var(--status) 55%, var(--color-border));
+  transform: translateY(-2px);
+}
+
+/* Status bar on the left edge */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.5rem;
+  background: var(--status);
+}
+
+.card-ok {
+  --status: var(--color-ok);
+}
+
+.card-soon {
+  --status: var(--color-soon);
+}
+
+.card-overdue {
+  --status: var(--color-overdue);
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.card-title {
+  margin: 0.25rem 0 0;
+  font-size: 1.625rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.card-car,
+.card-date {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+}
+
+/* Type label: common rules here, one color class per type below */
+.badge {
+  --badge: var(--color-accent);
+
+  display: inline-block;
+  padding: 0.25rem 0.875rem;
+  background: var(--badge);
+  color: var(--color-on-badge);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.badge-itp {
+  --badge: var(--color-badge-itp);
+}
+
+.badge-rca {
+  --badge: var(--color-badge-rca);
+}
+
+.badge-road-tax {
+  --badge: var(--color-badge-road-tax);
+}
+
+.badge-service {
+  --badge: var(--color-badge-service);
+}
+
+/* Days remaining: the number is the main thing on each card,
+   placed on the opposite end from the title. */
+.card-days {
+  flex-shrink: 0;
+  margin: 0;
+  text-align: right;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+}
+
+.days-number {
+  display: block;
+  font-size: clamp(3.25rem, 6vw, 4.25rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  color: var(--status);
+}
+
+/* Done state: add the class "card-done" to a card (e.g. when the user
+   marks it as finished). Dimmed, struck-through, neutral status bar,
+   plus a "Finished" label with a check mark in the top-right corner. */
+.card-done {
+  --status: var(--color-border-strong);
+
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  box-shadow: none;
+  opacity: 0.8;
+}
+
+.card-done:hover {
+  transform: none;
+  border-color: var(--color-border-strong);
+}
+
+.card-done::after {
+  content: "\2713  Finished";
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.25rem 0.75rem;
+  background: color-mix(in srgb, var(--color-ok) 16%, transparent);
+  color: var(--color-ok);
+  border: 1px solid color-mix(in srgb, var(--color-ok) 45%, transparent);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.card-done .card-title,
+.card-done .card-date,
+.card-done .card-car {
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+.card-done .badge {
+  opacity: 0.55;
+}
+
+.card-done .days-number {
+  color: var(--color-text-muted);
+}
+
+/* ---------- Form ---------- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 30rem;
+  padding: 2.75rem 2.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.form-label {
+  display: block;
+  margin: 1.75rem 0 0.625rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.form-label:first-child {
+  margin-top: 0;
+}
+
+.form-field {
+  display: block;
+  width: 100%;
+  padding: 1.125rem 1.25rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  resize: vertical;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-field:hover {
+  border-color: var(--color-border-strong);
+}
+
+.form-field:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-glow-focus);
+}
+
+.button {
+  display: block;
+  width: 100%;
+  margin-top: auto;
+  padding: 1.125rem 1.25rem;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border: 0;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+/* Keeps a gap above the button even when the form is stretched tall */
+.form > :nth-last-child(2) {
+  margin-bottom: 2rem;
+}
+
+.button:hover {
+  background: var(--color-accent-strong);
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+/* Keyboard focus */
+.form-field:focus-visible,
+.button:focus-visible,
+.nav-link:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Footer: fixed bottom bar with links ---------- */
+
+.app-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.625rem 1.25rem;
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--color-border);
+  box-shadow: var(--shadow-bar);
+  text-align: center;
+}
+
+.app-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: 30rem;
+  margin: 0 auto;
+}
+
+.nav-link {
+  flex: 1;
+  padding: 0.75rem 0.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-link:hover {
+  background: var(--color-surface-raised);
+  color: var(--color-accent);
+}
+
+.footer-note {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 700px) {
+  .container {
+    gap: 2.5rem;
+  }
+
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .form {
+    min-height: 0;
+  }
+
+  .card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+    padding: 1.75rem 1.5rem 1.75rem 2rem;
+  }
+
+  .card-days {
+    text-align: left;
+  }
+
+  .form {
+    padding: 1.5rem;
+  }
+}
+
+/* Respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  * {
+    transition: none !important;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}
