@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import ReminderList from "./components/ReminderList.jsx";
 
 const CARS = [
   { name: "Dacia Duster", plate: "B 123 ABC" },
@@ -7,10 +7,10 @@ const CARS = [
 ];
 
 const TYPES = [
-  { value: "itp", label: "ITP", badge: "badge-itp" },
-  { value: "rca", label: "RCA", badge: "badge-rca" },
-  { value: "rovinieta", label: "Road tax", badge: "badge-road-tax" },
-  { value: "revizie", label: "Service", badge: "badge-service" },
+  { value: "itp", label: "ITP" },
+  { value: "rca", label: "RCA" },
+  { value: "rovinieta", label: "Road tax" },
+  { value: "revizie", label: "Service" },
 ];
 
 const INITIAL_REMINDERS = [
@@ -18,28 +18,6 @@ const INITIAL_REMINDERS = [
   { id: 2, title: "RCA Dacia Logan", type: "rca", expires: "2027-03-01", done: true },
   { id: 3, title: "Rovinietă Dacia Logan", type: "rovinieta", expires: "2026-10-15", done: false },
 ];
-
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-function daysLeft(expires, today = new Date()) {
-  const [y, m, d] = expires.split("-").map(Number);
-  const end = Date.UTC(y, m - 1, d);
-  const start = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
-  return Math.round((end - start) / 86400000);
-}
-
-function formatDate(expires) {
-  const [y, m, d] = expires.split("-").map(Number);
-  return `${d} ${MONTHS[m - 1]} ${y}`;
-}
-
-function statusClass(reminder) {
-  if (reminder.done) return "card-done";
-  const days = daysLeft(reminder.expires);
-  if (days < 0) return "card-overdue";
-  if (days <= 30) return "card-soon";
-  return "card-ok";
-}
 
 export default function App() {
   const [reminders, setReminders] = useState(INITIAL_REMINDERS);
@@ -148,36 +126,7 @@ export default function App() {
         <section className="panel" id="list" aria-labelledby="list-title">
           <h2 className="section-title" id="list-title">My deadlines</h2>
 
-          <ul className="card-list">
-            {reminders.map((r) => {
-              const days = daysLeft(r.expires);
-              const typeInfo = TYPES.find((t) => t.value === r.type);
-              const carInfo = CARS.find((c) => c.name === r.car);
-              return (
-                <li key={r.id} className={`card ${statusClass(r)}`}>
-                  <div className="card-info">
-                    <h3 className="card-title">{r.title}</h3>
-                    <span className={`badge ${typeInfo.badge}`}>{typeInfo.label}</span>
-                    {carInfo && <p className="card-car">{r.car}, {carInfo.plate}</p>}
-                    <p className="card-date">
-                      {r.done ? "Done, planned for " : "Expires on "}
-                      <time dateTime={r.expires}>{formatDate(r.expires)}</time>
-                    </p>
-                  </div>
-                  <p className="card-days">
-                    {r.done ? (
-                      <span className="days-number">Done</span>
-                    ) : (
-                      <>
-                        <span className="days-number">{Math.abs(days)}</span>{" "}
-                        {days < 0 ? "days overdue" : days === 1 ? "day left" : "days left"}
-                      </>
-                    )}
-                  </p>
-                </li>
-              );
-            })}
-          </ul>
+          <ReminderList reminders={reminders} cars={CARS} />
         </section>
       </main>
 

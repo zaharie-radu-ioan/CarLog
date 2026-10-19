@@ -645,3 +645,14 @@ body::before {
     transform: none;
   }
 }
+/* ---------- Empty list message ---------- */
+
+.empty {
+  margin: 0;
+  padding: 2rem;
+  text-align: center;
+  font-style: italic;
+  color: var(--color-text-muted);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+}
