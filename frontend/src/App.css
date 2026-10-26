@@ -52,8 +52,9 @@
   --content-width: 88rem;
 }
 
+/* System theme, unless the user explicitly picked light mode */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --color-bg: #06121b;
     --color-surface: #0b1d2b;
     --color-surface-raised: #11293a;
@@ -88,6 +89,48 @@
     --shadow-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 18px 40px -18px rgb(0 0 0 / 0.8);
     --shadow-bar: 0 -10px 30px rgb(0 0 0 / 0.5);
   }
+}
+
+/* Stage 5: the theme picked with the button wins over the system one */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #06121b;
+  --color-surface: #0b1d2b;
+  --color-surface-raised: #11293a;
+  --color-border: #1a3a4d;
+  --color-border-strong: #2a5670;
+
+  --color-text: #e8f4fb;
+  --color-text-muted: #8fb0c4;
+
+  --color-accent: #5fd3a5;
+  --color-accent-strong: #8be6c3;
+  --color-on-accent: #04170f;
+  --color-focus: #b7f0dc;
+  --color-glow: rgb(95 211 165 / 0.14);
+  --color-glow-focus: rgb(95 211 165 / 0.22);
+
+  --color-ok: #4ade9c;
+  --color-soon: #fbbf4a;
+  --color-overdue: #ff7a85;
+
+  --color-on-badge: #04120f;
+  --color-badge-itp: #7db3ff;
+  --color-badge-rca: #c9a8ff;
+  --color-badge-road-tax: #fbbf4a;
+  --color-badge-service: #4ade9c;
+
+  --color-accent-2: #6ea8ff;
+  --color-accent-3: #a9d6f5;
+  --color-accent-4: #ffd166;
+  --bg-opacity: 0.28;
+
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 18px 40px -18px rgb(0 0 0 / 0.8);
+  --shadow-bar: 0 -10px 30px rgb(0 0 0 / 0.5);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 * {
@@ -655,4 +698,122 @@ body::before {
   color: var(--color-text-muted);
   border: 1px dashed var(--color-border-strong);
   border-radius: var(--radius-lg);
+}
+
+/* ---------- Stage 5: checkbox, delete button and theme switch ---------- */
+
+/* The label holds the checkbox and the card text; a click anywhere toggles */
+.card-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.card-check {
+  flex-shrink: 0;
+  width: 1.375rem;
+  height: 1.375rem;
+  margin: 0.6rem 0 0;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.card-check:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Days left and the delete button, stacked on the right side */
+.card-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.btn-danger {
+  padding: 0.4rem 1rem;
+  background: transparent;
+  color: var(--color-overdue);
+  border: 1px solid var(--color-overdue);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-danger:hover {
+  background: var(--color-overdue);
+  color: var(--color-on-accent);
+}
+
+.btn-danger:focus-visible,
+.theme-toggle:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Theme switch: last column of the header grid, next to the summary */
+.app-header {
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "logo title summary toggle"
+    "logo desc  summary toggle";
+}
+
+.theme-toggle {
+  grid-area: toggle;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: 0.75rem;
+  padding: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.theme-toggle svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.theme-toggle:hover {
+  background: var(--color-surface-raised);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+@media (max-width: 700px) {
+  .app-header {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "logo title title"
+      "logo desc  desc"
+      "summary summary toggle";
+  }
+
+  .theme-toggle {
+    align-self: end;
+  }
+
+  /* Room above the title for the "Finished" label */
+  .card-done .card-main {
+    padding-top: 1.75rem;
+  }
+
+  .card-side {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 }

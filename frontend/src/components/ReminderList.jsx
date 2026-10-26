@@ -1,8 +1,6 @@
-
 import ReminderCard from "./ReminderCard.jsx";
 
-export default function ReminderList({ reminders, cars }) {
-  
+export default function ReminderList({ reminders, cars, onToggle, onDelete }) {
   if (reminders.length === 0) {
     return <p className="empty">No deadlines yet.</p>;
   }
@@ -14,6 +12,8 @@ export default function ReminderList({ reminders, cars }) {
           key={reminder.id}
           reminder={reminder}
           car={cars.find((c) => c.name === reminder.car)}
+          onToggle={onToggle}
+          onDelete={onDelete}
         />
       ))}
     </ul>
