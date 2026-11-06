@@ -11,7 +11,8 @@ It is made for car owners who want one list that shows what expires next and wha
 | done     | boolean      | toggled from the list, default false     |
 | expires  | date         | required, the day the deadline expires   |
 | type     | fixed values | itp, rca, rovinieta, revizie             |
-| car      | relation     | Dacia Duster, Volkswagen Golf            |
+| carId    | relation     | id of a car from `cars` (Dacia Logan, Volkswagen Golf) |
+| notes    | text         | optional, what was done or what to check |
 | user     | relation     | the owner of the item (from week 11)     |
 
 Sample data used across all stages:
@@ -20,15 +21,20 @@ Sample data used across all stages:
 2. RCA Dacia Logan, done, rca
 3. Rovinietă Dacia Logan, active, rovinieta
 
+Since stage 6 the data lives in `frontend/db.json`: 2 cars and 8 deadlines
+(overdue, due soon, ok and done, for every type).
+
 ## How to run
 
 ```
 cd frontend
 npm install
-npm run dev
+npm run api   # terminal 1, http://localhost:3001
+npm run dev   # terminal 2, http://localhost:5173
 ```
 
 Then open the address printed in the terminal (http://localhost:5173).
+The API address can be changed with `VITE_API_URL` (see `frontend/.env.example`).
 The Stage 1 and Stage 2 versions are in `mockup/`: open `mockup/index.html` in a browser, and the console (F12) for the data logic.
 
 ## AI usage
@@ -39,6 +45,7 @@ The Stage 1 and Stage 2 versions are in `mockup/`: open `mockup/index.html` in a
 | Claude                     | `carlog.js` (data array, functions, console tests)                                        |
 | GitHub Copilot (VS Code)   | Stage 4: `ReminderList` and `ReminderCard` components                                     |
 | GitHub Copilot (VS Code)   | Stage 5: local state, toggle/delete events, light/dark theme                               |
+| Claude                     | Stage 6: `db.json`, `api.js`, loading/error states, status summary and car filter          |
 
 Details per stage: see the ai-log/ folder.
 
@@ -49,7 +56,8 @@ Details per stage: see the ai-log/ folder.
 - [x] Stage 3: Vite and React project
 - [x] Stage 4: components rendered from data
 - [x] Stage 5: local state and events
-- [ ] Stage 6: loading data from a mock API
+- [x] Stage 6: data from a mock API
+- [ ] Stage 7: form and validation
 
 ## Stage 1: static mockup
 
@@ -137,3 +145,36 @@ which is what stage 6 and stage 10 fix.
 | S5-R6 | Light/dark toggle uses state and `data-theme`       | [`App.jsx#L22-L25`](https://github.com/zaharie-radu-ioan/CarLog/blob/c5b091cc38db1c8336c27024e12751453599f3f8/frontend/src/App.jsx#L22-L25), [`App.jsx#L49-L53`](https://github.com/zaharie-radu-ioan/CarLog/blob/c5b091cc38db1c8336c27024e12751453599f3f8/frontend/src/App.jsx#L49-L53), [`App.jsx#L91-L112`](https://github.com/zaharie-radu-ioan/CarLog/blob/c5b091cc38db1c8336c27024e12751453599f3f8/frontend/src/App.jsx#L91-L112), [`App.css#L55-L134`](https://github.com/zaharie-radu-ioan/CarLog/blob/c5b091cc38db1c8336c27024e12751453599f3f8/frontend/src/App.css#L55-L134) | Toggle the button with both system color-scheme settings |
 | S5-R7 | No console warnings; README and AI log documented   | [`README.md#stage-5-local-state-and-events`](./README.md#stage-5-local-state-and-events), [`etapa-05.md`](./ai-log/etapa-05.md)                                                                                         | Check DevTools Console and read both documents           |
 | S5-R8 | "Stage 5" commit pushed                             | [`c5b091c`](https://github.com/zaharie-radu-ioan/CarLog/commit/c5b091cc38db1c8336c27024e12751453599f3f8)                                                                                                                                                       | Check commit history                                     |
+
+## Stage 6: data from a mock API
+
+The cars and the deadlines are no longer written in the React code. They are served by
+json-server from `db.json`, on two routes: `/cars` and `/reminders`. All HTTP requests
+are in `src/api.js`, and the server address comes from the `VITE_API_URL` environment variable.
+
+On load, `App` asks for both lists at the same time (`useEffect` + `Promise.all`) and shows
+one of three states: a loading message, an error message that says what to do (with a
+**Try again** button), or the list.
+
+With the data from the server the list became more useful:
+
+- the deadlines are sorted by urgency (overdue first, done items at the end);
+- three counters show how many items are overdue, due in 30 days and up to date; a click on a counter filters the list;
+- the garage shows each car (plate, year, fuel, km) with its next deadline; a click on a car shows only its deadlines;
+- service items can have notes (what was done or what has to be checked).
+
+    npm run api   # terminal 1, http://localhost:3001
+    npm run dev   # terminal 2, http://localhost:5173
+
+Checking, deleting and adding still change only the local state and are lost on refresh;
+stage 7 saves them on the server.
+
+| ID    | Requirement                            | Where (permalink)                                                                                                    | How to check                                               |
+| ----- | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| S6-R1 | `npm run api` starts, routes show JSON | [`package.json#L8`](https://github.com/zaharie-radu-ioan/CarLog/blob/61decc2542c6082eddecd2d3045077779c52874d/frontend/package.json#L8), [`db.json`](https://github.com/zaharie-radu-ioan/CarLog/blob/61decc2542c6082eddecd2d3045077779c52874d/frontend/db.json)                                  | open localhost:3001/cars and localhost:3001/reminders      |
+| S6-R2 | data no longer in React code           | [`App.jsx#L20-L21`](https://github.com/zaharie-radu-ioan/CarLog/blob/61decc2542c6082eddecd2d3045077779c52874d/frontend/src/App.jsx#L20-L21) (`useState([])`)                                                | read                                                       |
+| S6-R3 | loading message while waiting          | [`App.jsx#L223-L225`](https://github.com/zaharie-radu-ioan/CarLog/blob/61decc2542c6082eddecd2d3045077779c52874d/frontend/src/App.jsx#L223-L225)                                                              | `npx json-server --watch db.json --port 3001 --delay 4000` |
+| S6-R4 | error message when API is down         | [`App.jsx#L227-L236`](https://github.com/zaharie-radu-ioan/CarLog/blob/61decc2542c6082eddecd2d3045077779c52874d/frontend/src/App.jsx#L227-L236), [`App.jsx#L36-L58`](https://github.com/zaharie-radu-ioan/CarLog/blob/61decc2542c6082eddecd2d3045077779c52874d/frontend/src/App.jsx#L36-L58) (`useEffect` with `ignore`) | stop `npm run api`, refresh, then **Try again**            |
+| S6-R5 | fetch only in api.js, URL from env     | [`api.js#L1-L18`](https://github.com/zaharie-radu-ioan/CarLog/blob/61decc2542c6082eddecd2d3045077779c52874d/frontend/src/api.js#L1-L18), [`.env.example`](https://github.com/zaharie-radu-ioan/CarLog/blob/61decc2542c6082eddecd2d3045077779c52874d/frontend/.env.example)                          | search for `fetch`                                         |
+| S6-R6 | README Stage 6 section + AI log        | [`README.md#stage-6-data-from-a-mock-api`](./README.md#stage-6-data-from-a-mock-api), [`etapa-06.md`](https://github.com/zaharie-radu-ioan/CarLog/blob/61decc2542c6082eddecd2d3045077779c52874d/ai-log/etapa-06.md) | read                                                       |
+| S6-R7 | commit "Stage 6" pushed                | [`61decc2`](https://github.com/zaharie-radu-ioan/CarLog/commit/61decc2542c6082eddecd2d3045077779c52874d)                                                    | commit history                                             |
