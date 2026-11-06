@@ -1,0 +1,16 @@
+{
+  "cars": [
+    { "id": 1, "name": "Dacia Logan", "plate": "B 123 ABC", "year": 2017, "fuel": "Petrol", "km": 142300 },
+    { "id": 2, "name": "Volkswagen Golf", "plate": "CJ 45 XYZ", "year": 2015, "fuel": "Diesel", "km": 176800 }
+  ],
+  "reminders": [
+    { "id": 1, "title": "ITP Dacia Logan", "type": "itp", "carId": 1, "expires": "2026-11-20", "done": false },
+    { "id": 2, "title": "RCA Dacia Logan", "type": "rca", "carId": 1, "expires": "2027-03-01", "done": true },
+    { "id": 3, "title": "Rovinietă Dacia Logan", "type": "rovinieta", "carId": 1, "expires": "2026-10-15", "done": false },
+    { "id": 4, "title": "Oil change Dacia Logan", "type": "revizie", "carId": 1, "expires": "2026-09-12", "done": true, "notes": "5W-30 oil, oil and air filter, at 142 300 km" },
+    { "id": 5, "title": "RCA Volkswagen Golf", "type": "rca", "carId": 2, "expires": "2026-12-02", "done": false },
+    { "id": 6, "title": "Rovinietă Volkswagen Golf", "type": "rovinieta", "carId": 2, "expires": "2027-01-10", "done": false },
+    { "id": 7, "title": "ITP Volkswagen Golf", "type": "itp", "carId": 2, "expires": "2027-06-18", "done": false },
+    { "id": 8, "title": "Timing belt Volkswagen Golf", "type": "revizie", "carId": 2, "expires": "2027-02-15", "done": false, "notes": "Belt and water pump, due at 180 000 km" }
+  ]
+}

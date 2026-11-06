@@ -2,7 +2,7 @@ import ReminderCard from "./ReminderCard.jsx";
 
 export default function ReminderList({ reminders, cars, onToggle, onDelete }) {
   if (reminders.length === 0) {
-    return <p className="empty">No deadlines yet.</p>;
+    return <p className="empty">No deadlines match this filter.</p>;
   }
 
   return (
@@ -11,7 +11,7 @@ export default function ReminderList({ reminders, cars, onToggle, onDelete }) {
         <ReminderCard
           key={reminder.id}
           reminder={reminder}
-          car={cars.find((c) => c.name === reminder.car)}
+          car={cars.find((c) => c.id === reminder.carId)}
           onToggle={onToggle}
           onDelete={onDelete}
         />

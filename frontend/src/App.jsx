@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReminderList from "./components/ReminderList.jsx";
-
-const CARS = [
-  { name: "Dacia Duster", plate: "B 123 ABC" },
-  { name: "Volkswagen Golf", plate: "CJ 45 XYZ" },
-];
+import StatusSummary from "./components/StatusSummary.jsx";
+import CarFilter from "./components/CarFilter.jsx";
+import { fetchCars, fetchReminders } from "./api.js";
+import { daysLeft, status } from "./utils/dates.js";
 
 const TYPES = [
   { value: "itp", label: "ITP" },
@@ -13,30 +12,73 @@ const TYPES = [
   { value: "revizie", label: "Service" },
 ];
 
-const INITIAL_REMINDERS = [
-  { id: 1, title: "ITP Dacia Logan", type: "itp", expires: "2026-11-20", done: false },
-  { id: 2, title: "RCA Dacia Logan", type: "rca", expires: "2027-03-01", done: true },
-  { id: 3, title: "Rovinietă Dacia Logan", type: "rovinieta", expires: "2026-10-15", done: false },
-];
-
-// Starting theme: the one set in the operating system
 function initialTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 export default function App() {
-  const [reminders, setReminders] = useState(INITIAL_REMINDERS);
+  const [reminders, setReminders] = useState([]);
+  const [cars, setCars] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [reloadKey, setReloadKey] = useState(0);
+
+  const [carFilter, setCarFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+
   const [title, setTitle] = useState("");
-  const [car, setCar] = useState(CARS[0].name);
+  const [carId, setCarId] = useState("");
   const [type, setType] = useState(TYPES[0].value);
   const [date, setDate] = useState("");
   const [theme, setTheme] = useState(initialTheme);
 
-  // Derived value: recalculated on every render, never kept in state
-  const active = reminders.filter((r) => !r.done).length;
+  // Runs after the first render, and again only when reloadKey changes
+  useEffect(() => {
+    let ignore = false; // do not set state if the component is gone meanwhile
 
-  // Immutable updates: a new list, and a new object for the changed item
-  function handleToggle(id) {
+    async function load() {
+      try {
+        const [carsData, remindersData] = await Promise.all([fetchCars(), fetchReminders()]);
+        if (!ignore) {
+          setCars(carsData);
+          setReminders(remindersData);
+          if (carsData.length > 0) setCarId(String(carsData[0].id));
+        }
+      } catch (err) {
+        if (!ignore) setError(err.message);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      ignore = true;
+    };
+  }, [reloadKey]);
+
+  function handleRetry() {
+    setError(null);
+    setLoading(true);
+    setReloadKey((k) => k + 1);
+  }
+
+  const active = reminders.filter((r) => !r.done).length;
+  const counts = { overdue: 0, soon: 0, ok: 0 };
+  for (const r of reminders) {
+    if (!r.done) counts[status(r)] += 1;
+  }
+
+  const visible = reminders
+    .filter((r) => carFilter === "all" || r.carId === carFilter)
+    .filter((r) => statusFilter === "all" || status(r) === statusFilter)
+    .sort((a, b) => {
+      if (a.done !== b.done) return a.done ? 1 : -1;
+      return daysLeft(a.expires) - daysLeft(b.expires);
+    });
+
+
+    function handleToggle(id) {
     setReminders((prev) =>
       prev.map((r) => (r.id === id ? { ...r, done: !r.done } : r))
     );
@@ -54,8 +96,9 @@ export default function App() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    if (title.trim() === "" || date === "") return;
-    const item = { title: title.trim(), type, car, expires: date, done: false };
+    if (title.trim() === "" || date === "" || carId === "") return;
+    // Stays local in stage 6; stage 7 sends it to the server with POST
+    const item = { title: title.trim(), type, carId: Number(carId), expires: date, done: false };
     setReminders((prev) => {
       const nextId = prev.reduce((max, r) => Math.max(max, r.id), 0) + 1;
       return [...prev, { id: nextId, ...item }];
@@ -86,7 +129,9 @@ export default function App() {
           Keep track of ITP, RCA, road tax and service for your cars.
         </p>
         <p className="app-summary">
-          {reminders.length} items, {active} active
+          {loading
+            ? "Loading..."
+            : `${cars.length} cars, ${reminders.length} items, ${active} active`}
         </p>
         <button
           className="theme-toggle"
@@ -134,11 +179,13 @@ export default function App() {
               className="form-field"
               id="car"
               name="car"
-              value={car}
-              onChange={(e) => setCar(e.target.value)}
+              value={carId}
+              onChange={(e) => setCarId(e.target.value)}
+              disabled={cars.length === 0}
             >
-              {CARS.map((c) => (
-                <option key={c.name} value={c.name}>{c.name}</option>
+              {cars.length === 0 && <option value="">No cars loaded</option>}
+              {cars.map((c) => (
+                <option key={c.id} value={c.id}>{c.name}, {c.plate}</option>
               ))}
             </select>
 
@@ -172,12 +219,43 @@ export default function App() {
         <section className="panel" id="list" aria-labelledby="list-title">
           <h2 className="section-title" id="list-title">My deadlines</h2>
 
-          <ReminderList
-            reminders={reminders}
-            cars={CARS}
-            onToggle={handleToggle}
-            onDelete={handleDelete}
-          />
+          {/* The three states of a load: waiting, failed, succeeded */}
+          {loading && (
+            <p className="info" role="status">Loading your garage...</p>
+          )}
+
+          {error && (
+            <div className="error" role="alert">
+              <p>
+                Could not load the data: {error}. Is <code>npm run api</code> running?
+              </p>
+              <button className="btn-retry" type="button" onClick={handleRetry}>
+                Try again
+              </button>
+            </div>
+          )}
+
+          {!loading && !error && (
+            <>
+              <StatusSummary
+                counts={counts}
+                selected={statusFilter}
+                onSelect={setStatusFilter}
+              />
+              <CarFilter
+                cars={cars}
+                reminders={reminders}
+                selected={carFilter}
+                onSelect={setCarFilter}
+              />
+              <ReminderList
+                reminders={visible}
+                cars={cars}
+                onToggle={handleToggle}
+                onDelete={handleDelete}
+              />
+            </>
+          )}
         </section>
       </main>
 

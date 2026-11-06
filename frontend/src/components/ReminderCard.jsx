@@ -1,3 +1,4 @@
+import { daysLeft, formatDate, status } from "../utils/dates.js";
 
 const TYPE_LABELS = { itp: "ITP", rca: "RCA", rovinieta: "Road tax", revizie: "Service" };
 const TYPE_BADGES = {
@@ -7,27 +8,9 @@ const TYPE_BADGES = {
   revizie: "badge-service",
 };
 
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-function daysLeft(expires, today = new Date()) {
-  const [y, m, d] = expires.split("-").map(Number);
-  const end = Date.UTC(y, m - 1, d);
-  const start = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
-  return Math.round((end - start) / 86400000);
-}
-
-function formatDate(expires) {
-  const [y, m, d] = expires.split("-").map(Number);
-  return `${d} ${MONTHS[m - 1]} ${y}`;
-}
-
 // The card's look depends on the data: done, overdue, due soon or ok.
 function statusClass(reminder) {
-  if (reminder.done) return "card-done";
-  const days = daysLeft(reminder.expires);
-  if (days < 0) return "card-overdue";
-  if (days <= 30) return "card-soon";
-  return "card-ok";
+  return `card-${status(reminder)}`;
 }
 
 export default function ReminderCard({ reminder, car, onToggle, onDelete }) {
@@ -51,6 +34,7 @@ export default function ReminderCard({ reminder, car, onToggle, onDelete }) {
               {car.name}, {car.plate}
             </p>
           )}
+          {reminder.notes && <p className="card-notes">{reminder.notes}</p>}
           <p className="card-date">
             {reminder.done ? "Done, planned for " : "Expires on "}
             <time dateTime={reminder.expires}>{formatDate(reminder.expires)}</time>

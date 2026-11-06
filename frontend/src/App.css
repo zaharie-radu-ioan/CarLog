@@ -22,6 +22,8 @@
   --color-ok: #14a06a;
   --color-soon: #e8920c;
   --color-overdue: #e5484d;
+  --color-error-bg: #fdecec;
+  --color-error-border: #f5b5b7;
 
   /* Type badges */
   --color-on-badge: #ffffff;
@@ -74,6 +76,8 @@
     --color-ok: #4ade9c;
     --color-soon: #fbbf4a;
     --color-overdue: #ff7a85;
+    --color-error-bg: #2a1418;
+    --color-error-border: #6b2a33;
 
     --color-on-badge: #04120f;
     --color-badge-itp: #7db3ff;
@@ -113,6 +117,8 @@
   --color-ok: #4ade9c;
   --color-soon: #fbbf4a;
   --color-overdue: #ff7a85;
+  --color-error-bg: #2a1418;
+  --color-error-border: #6b2a33;
 
   --color-on-badge: #04120f;
   --color-badge-itp: #7db3ff;
@@ -815,5 +821,215 @@ body::before {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+  }
+}
+/* ---------- Stage 6: loading and error states ---------- */
+
+.info {
+  margin: 0;
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.info::before {
+  content: "";
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.75rem;
+  vertical-align: -0.15rem;
+  border: 2px solid var(--color-border-strong);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  color: var(--color-overdue);
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  border-radius: var(--radius-sm);
+}
+
+.error p {
+  margin: 0;
+}
+
+.btn-retry {
+  padding: 0.6rem 1.1rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--color-overdue);
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.btn-retry:hover {
+  background: var(--color-surface);
+}
+
+/* ---------- Stage 6: status summary (filters by status) ---------- */
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-tile {
+  --status: var(--color-ok);
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  padding: 1.1rem 1.25rem;
+  font: inherit;
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 5px solid var(--status);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.15s ease;
+}
+
+.summary-overdue {
+  --status: var(--color-overdue);
+}
+
+.summary-soon {
+  --status: var(--color-soon);
+}
+
+.summary-tile:hover {
+  transform: translateY(-1px);
+}
+
+.summary-tile[aria-pressed="true"] {
+  border-color: var(--status);
+  background: color-mix(in srgb, var(--status) 12%, var(--color-surface));
+}
+
+.summary-number {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--status);
+}
+
+.summary-label {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+/* ---------- Stage 6: garage (filters by car) ---------- */
+
+.garage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.garage-car {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  min-width: 12rem;
+  height: 100%;
+  padding: 1rem 1.25rem;
+  font: inherit;
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-surface-raised);
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.garage-car[aria-pressed="true"] {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+}
+
+.garage-name {
+  font-weight: 700;
+}
+
+.garage-plate {
+  padding: 0.1rem 0.5rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0a1a2f;
+  background: #ffffff;
+  border: 2px solid #0a1a2f;
+  border-left: 0.6rem solid #1d4ed8;
+  border-radius: 0.3rem;
+}
+
+.garage-meta,
+.garage-next {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.garage-next {
+  color: var(--color-text);
+}
+
+.card-notes {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.summary-tile:focus-visible,
+.garage-car:focus-visible,
+.btn-retry:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .garage-car {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .garage li {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .info::before {
+    animation: none;
   }
 }
