@@ -1,0 +1,6 @@
+{
+  "resource": "reminders",
+  "title": "title",
+  "done": "done",
+  "sample": { "carId": 2, "type": "rca", "expires": "2027-05-20" }
+}

@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import ReminderList from "./components/ReminderList.jsx";
 import StatusSummary from "./components/StatusSummary.jsx";
 import CarFilter from "./components/CarFilter.jsx";
-import { fetchCars, fetchReminders } from "./api.js";
+import ReminderForm from "./components/ReminderForm.jsx";
+import {
+  createReminder,
+  deleteReminder,
+  fetchCars,
+  fetchReminders,
+  updateReminder,
+} from "./api.js";
 import { daysLeft, status } from "./utils/dates.js";
-
-const TYPES = [
-  { value: "itp", label: "ITP" },
-  { value: "rca", label: "RCA" },
-  { value: "rovinieta", label: "Road tax" },
-  { value: "revizie", label: "Service" },
-];
 
 function initialTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -26,10 +26,6 @@ export default function App() {
   const [carFilter, setCarFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  const [title, setTitle] = useState("");
-  const [carId, setCarId] = useState("");
-  const [type, setType] = useState(TYPES[0].value);
-  const [date, setDate] = useState("");
   const [theme, setTheme] = useState(initialTheme);
 
   // Runs after the first render, and again only when reloadKey changes
@@ -42,7 +38,6 @@ export default function App() {
         if (!ignore) {
           setCars(carsData);
           setReminders(remindersData);
-          if (carsData.length > 0) setCarId(String(carsData[0].id));
         }
       } catch (err) {
         if (!ignore) setError(err.message);
@@ -77,34 +72,35 @@ export default function App() {
       return daysLeft(a.expires) - daysLeft(b.expires);
     });
 
-
-    function handleToggle(id) {
-    setReminders((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, done: !r.done } : r))
-    );
+  // Server first, then state: only what was saved reaches the screen
+  async function handleAdd(reminder) {
+    const created = await createReminder(reminder); // the server returns the item with its id
+    setReminders((prev) => [...prev, created]);
   }
 
-  function handleDelete(id) {
-    setReminders((prev) => prev.filter((r) => r.id !== id));
+  async function handleToggle(id) {
+    const reminder = reminders.find((r) => r.id === id);
+    try {
+      const updated = await updateReminder(id, { done: !reminder.done });
+      setReminders((prev) => prev.map((r) => (r.id === id ? updated : r)));
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  async function handleDelete(id) {
+    try {
+      await deleteReminder(id);
+      setReminders((prev) => prev.filter((r) => r.id !== id));
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   function handleTheme() {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
     document.documentElement.dataset.theme = next;
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    if (title.trim() === "" || date === "" || carId === "") return;
-    // Stays local in stage 6; stage 7 sends it to the server with POST
-    const item = { title: title.trim(), type, carId: Number(carId), expires: date, done: false };
-    setReminders((prev) => {
-      const nextId = prev.reduce((max, r) => Math.max(max, r.id), 0) + 1;
-      return [...prev, { id: nextId, ...item }];
-    });
-    setTitle("");
-    setDate("");
   }
 
   return (
@@ -161,59 +157,7 @@ export default function App() {
         <section className="panel" id="add" aria-labelledby="add-title">
           <h2 className="section-title" id="add-title">Add a deadline</h2>
 
-          <form className="form" onSubmit={handleSubmit}>
-            <label className="form-label" htmlFor="title">Title</label>
-            <input
-              className="form-field"
-              type="text"
-              id="title"
-              name="title"
-              maxLength={100}
-              placeholder="Ex: Renew ITP"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-
-            <label className="form-label" htmlFor="car">Car</label>
-            <select
-              className="form-field"
-              id="car"
-              name="car"
-              value={carId}
-              onChange={(e) => setCarId(e.target.value)}
-              disabled={cars.length === 0}
-            >
-              {cars.length === 0 && <option value="">No cars loaded</option>}
-              {cars.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}, {c.plate}</option>
-              ))}
-            </select>
-
-            <label className="form-label" htmlFor="type">Type</label>
-            <select
-              className="form-field"
-              id="type"
-              name="type"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
-              {TYPES.map((t) => (
-                <option key={t.value} value={t.value}>{t.label}</option>
-              ))}
-            </select>
-
-            <label className="form-label" htmlFor="date">Due date</label>
-            <input
-              className="form-field"
-              type="date"
-              id="date"
-              name="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-
-            <button className="button" type="submit">Add deadline</button>
-          </form>
+          <ReminderForm cars={cars} onAdd={handleAdd} />
         </section>
 
         <section className="panel" id="list" aria-labelledby="list-title">
@@ -221,13 +165,15 @@ export default function App() {
 
           {/* The three states of a load: waiting, failed, succeeded */}
           {loading && (
-            <p className="info" role="status">Loading your garage...</p>
+            <p className="info" role="status" data-testid="loading">
+              Loading your garage...
+            </p>
           )}
 
           {error && (
-            <div className="error" role="alert">
+            <div className="error" role="alert" data-testid="error">
               <p>
-                Could not load the data: {error}. Is <code>npm run api</code> running?
+                Something went wrong: {error}. Is <code>npm run api</code> running?
               </p>
               <button className="btn-retry" type="button" onClick={handleRetry}>
                 Try again
@@ -235,7 +181,8 @@ export default function App() {
             </div>
           )}
 
-          {!loading && !error && (
+          {/* The list stays on screen even if a toggle or a delete fails */}
+          {!loading && (
             <>
               <StatusSummary
                 counts={counts}

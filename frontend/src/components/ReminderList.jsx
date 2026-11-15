@@ -2,7 +2,11 @@ import ReminderCard from "./ReminderCard.jsx";
 
 export default function ReminderList({ reminders, cars, onToggle, onDelete }) {
   if (reminders.length === 0) {
-    return <p className="empty">No deadlines match this filter.</p>;
+    return (
+      <p className="empty" data-testid="empty">
+        No deadlines match this filter.
+      </p>
+    );
   }
 
   return (

@@ -17,7 +17,11 @@ export default function ReminderCard({ reminder, car, onToggle, onDelete }) {
   const days = daysLeft(reminder.expires);
 
   return (
-    <li className={`card ${statusClass(reminder)}`}>
+    <li
+      className={`card ${statusClass(reminder)}`}
+      data-testid="item"
+      data-id={reminder.id}
+    >
       {/* The label wraps the checkbox and the text, so a click anywhere on it toggles */}
       <label className="card-main">
         <input
@@ -25,9 +29,10 @@ export default function ReminderCard({ reminder, car, onToggle, onDelete }) {
           type="checkbox"
           checked={reminder.done}
           onChange={() => onToggle(reminder.id)}
+          data-testid="item-toggle"
         />
         <div className="card-info">
-          <h3 className="card-title">{reminder.title}</h3>
+          <h3 className="card-title" data-testid="item-title">{reminder.title}</h3>
           <span className={`badge ${TYPE_BADGES[reminder.type]}`}>{TYPE_LABELS[reminder.type]}</span>
           {car && (
             <p className="card-car">
@@ -58,6 +63,7 @@ export default function ReminderCard({ reminder, car, onToggle, onDelete }) {
           type="button"
           onClick={() => onDelete(reminder.id)}
           aria-label={`Delete ${reminder.title}`}
+          data-testid="item-delete"
         >
           Delete
         </button>
