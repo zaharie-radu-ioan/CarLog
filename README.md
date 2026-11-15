@@ -46,6 +46,7 @@ The Stage 1 and Stage 2 versions are in `mockup/`: open `mockup/index.html` in a
 | GitHub Copilot (VS Code)   | Stage 4: `ReminderList` and `ReminderCard` components                                     |
 | GitHub Copilot (VS Code)   | Stage 5: local state, toggle/delete events, light/dark theme                               |
 | Claude                     | Stage 6: `db.json`, `api.js`, loading/error states, status summary and car filter          |
+| Claude                     | Stage 7: `ReminderForm`, POST/PATCH/DELETE in `api.js`, `tw.json` and `data-testid`        |
 
 Details per stage: see the ai-log/ folder.
 
@@ -57,7 +58,8 @@ Details per stage: see the ai-log/ folder.
 - [x] Stage 4: components rendered from data
 - [x] Stage 5: local state and events
 - [x] Stage 6: data from a mock API
-- [ ] Stage 7: form and validation
+- [x] Stage 7: form and validation
+- [ ] Stage 8: routing and detail page
 
 ## Stage 1: static mockup
 
@@ -178,3 +180,31 @@ stage 7 saves them on the server.
 | S6-R5 | fetch only in api.js, URL from env     | [`api.js#L1-L18`](https://github.com/zaharie-radu-ioan/CarLog/blob/61decc2542c6082eddecd2d3045077779c52874d/frontend/src/api.js#L1-L18), [`.env.example`](https://github.com/zaharie-radu-ioan/CarLog/blob/61decc2542c6082eddecd2d3045077779c52874d/frontend/.env.example)                          | search for `fetch`                                         |
 | S6-R6 | README Stage 6 section + AI log        | [`README.md#stage-6-data-from-a-mock-api`](./README.md#stage-6-data-from-a-mock-api), [`etapa-06.md`](https://github.com/zaharie-radu-ioan/CarLog/blob/61decc2542c6082eddecd2d3045077779c52874d/ai-log/etapa-06.md) | read                                                       |
 | S6-R7 | commit "Stage 6" pushed                | [`61decc2`](https://github.com/zaharie-radu-ioan/CarLog/commit/61decc2542c6082eddecd2d3045077779c52874d)                                                    | commit history                                             |
+
+## Stage 7: form and validation
+
+Deadlines can be added from the page. The form is controlled and validated,
+and every change (add, toggle, delete) goes to the API before it shows up
+in the list, so everything survives a page refresh.
+
+The form lives in its own component, `ReminderForm`. Besides the required title it checks:
+
+- the title has at most 100 characters;
+- a car is selected;
+- the due date is filled in and its year is between 2000 and ten years from now.
+
+The error is shown under the fields, not in an `alert`. While the request is on its way the
+button says **Saving...** and cannot be pressed again, and the fields are cleared only if the
+server confirmed the save. `tw.json` (in the repository root) and the `data-testid` attributes
+are the landmarks for the automatic check.
+
+| ID    | Requirement | Where (permalink) | How to check |
+| ----- | ----------- | ----------------- | ------------ |
+| S7-R1 | controlled form: value + onChange on every field | [`ReminderForm.jsx#L17-L22`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/frontend/src/components/ReminderForm.jsx#L17-L22), [`ReminderForm.jsx#L73-L123`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/frontend/src/components/ReminderForm.jsx#L73-L123) | read |
+| S7-R2 | empty title shows an error, nothing is sent | [`ReminderForm.jsx#L27-L38`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/frontend/src/components/ReminderForm.jsx#L27-L38) (`validate`), [`ReminderForm.jsx#L40-L46`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/frontend/src/components/ReminderForm.jsx#L40-L46) | submit empty, watch Network |
+| S7-R3 | added item shows in the list and survives refresh | [`App.jsx#L76-L79`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/frontend/src/App.jsx#L76-L79) (`handleAdd`), [`api.js#L25-L27`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/frontend/src/api.js#L25-L27) | add, refresh |
+| S7-R4 | toggle and delete survive refresh | [`App.jsx#L81-L98`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/frontend/src/App.jsx#L81-L98) | toggle/delete, refresh |
+| S7-R5 | button disabled while sending, form cleared only on success | [`ReminderForm.jsx#L48-L65`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/frontend/src/components/ReminderForm.jsx#L48-L65), [`ReminderForm.jsx#L131`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/frontend/src/components/ReminderForm.jsx#L131) | `--delay 3000`; stop API and submit |
+| S7-R6 | tw.json and the data-testid attributes from table 7.3 | [`tw.json`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/tw.json), [`ReminderCard.jsx#L20-L66`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/frontend/src/components/ReminderCard.jsx#L20-L66), [`ReminderList.jsx#L6`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/frontend/src/components/ReminderList.jsx#L6) | `querySelectorAll` in the console |
+| S7-R7 | README Stage 7 section + AI log | [`README.md#stage-7-form-and-validation`](./README.md#stage-7-form-and-validation), [`etapa-07.md`](./ai-log/etapa-07.md) | read |
+| S7-R8 | commit "Stage 7" pushed | [`d00dbf4`](https://github.com/zaharie-radu-ioan/CarLog/commit/d00dbf474090afc6f2fdb194b021500f36be7a16) | commit history |
