@@ -1,0 +1,116 @@
+/* The form: one wide white box */
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 2.75rem 3rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.label {
+  display: block;
+  margin: 1.75rem 0 0.625rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.label:first-child {
+  margin-top: 0;
+}
+
+.field {
+  display: block;
+  width: 100%;
+  padding: 1.125rem 1.25rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Safari ignores padding on a native select: drop the native look
+   and draw our own arrow, so it matches the other fields */
+select.field {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 3rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2353697e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1.25rem center;
+  background-size: 1.25rem;
+  cursor: pointer;
+}
+
+/* The disabled select (no cars loaded yet) */
+select.field:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.field:hover {
+  border-color: var(--color-border-strong);
+}
+
+.field:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px var(--color-glow-focus);
+}
+
+.field[aria-invalid="true"] {
+  border-color: var(--color-overdue);
+}
+
+.button {
+  display: block;
+  width: 100%;
+  margin-top: 2rem;
+  padding: 1.25rem;
+  background: var(--gradient-soft);
+  color: var(--color-on-accent);
+  border: 0;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 12px 26px -12px var(--color-accent-2);
+  transition: filter 0.15s ease, transform 0.1s ease;
+}
+
+.button:hover {
+  filter: brightness(1.08) saturate(1.1);
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+/* Disabled while the request is on its way */
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: none;
+}
+
+/* Validation message, shown next to the fields (no alert) */
+.error {
+  margin: 1.5rem 0 0;
+  padding: 0.875rem 1.25rem;
+  color: var(--color-overdue);
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+@media (max-width: 700px) {
+  .form {
+    padding: 1.5rem;
+  }
+}

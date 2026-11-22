@@ -1,0 +1,367 @@
+:root {
+  /* Surfaces: light, airy, slightly cool */
+  --color-bg: #eef6fb;
+  --color-surface: #ffffff;
+  --color-surface-raised: #e1eef7;
+  --color-border: #d3e3ef;
+  --color-border-strong: #aecbe0;
+
+  /* Text */
+  --color-text: #0a1a2f;
+  --color-text-muted: #53697e;
+
+  /* Accent */
+  --color-accent: #14573f;
+  --color-accent-strong: #0e4430;
+  --color-on-accent: #ffffff;
+  --color-focus: #2f9e7a;
+  --color-glow: rgb(20 87 63 / 0.14);
+  --color-glow-focus: rgb(20 87 63 / 0.24);
+
+  /* Status */
+  --color-ok: #14a06a;
+  --color-soon: #e8920c;
+  --color-overdue: #e5484d;
+  --color-error-bg: #fdecec;
+  --color-error-border: #f5b5b7;
+
+  /* Type badges */
+  --color-on-badge: #ffffff;
+  --color-badge-itp: #2563eb;
+  --color-badge-rca: #7c3aed;
+  --color-badge-road-tax: #b45309;
+  --color-badge-service: #047857;
+
+  /* Extra palette for a livelier look */
+  --color-accent-2: #14325c;
+  --color-accent-3: #8ccaf2;
+  --color-accent-4: #ffd166;
+  --gradient: linear-gradient(90deg, var(--color-accent), var(--color-accent-2) 55%, var(--color-accent-3));
+  --gradient-logo: linear-gradient(135deg, var(--color-accent), var(--color-accent-2) 55%, var(--color-accent-3));
+  --gradient-soft: linear-gradient(135deg, var(--color-accent), var(--color-accent-2));
+
+  /* Faded page background. Swap for your own picture, e.g.
+     --bg-image: url("background.jpg"); */
+  --bg-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M-50 760C250 620 420 820 720 690S1150 520 1650 640' stroke='%232e8b68' stroke-opacity='.55' stroke-width='90'/%3E%3Cpath d='M-50 760C250 620 420 820 720 690S1150 520 1650 640' stroke='%23ffffff' stroke-opacity='.8' stroke-width='4' stroke-dasharray='34 30'/%3E%3Cpath d='M-50 330C200 230 480 420 760 300S1220 150 1650 260' stroke='%23305f9e' stroke-opacity='.4' stroke-width='60'/%3E%3C/g%3E%3Ccircle cx='1330' cy='170' r='150' fill='%238ccaf2' fill-opacity='.5'/%3E%3Ccircle cx='260' cy='150' r='110' fill='%2314573f' fill-opacity='.3'/%3E%3Ccircle cx='980' cy='520' r='70' fill='%238ccaf2' fill-opacity='.4'/%3E%3C/svg%3E");
+  --bg-opacity: 0.4;
+
+  --shadow-card: 0 1px 2px rgb(10 26 47 / 0.05), 0 12px 32px -16px rgb(10 26 47 / 0.2);
+  --shadow-bar: 0 -8px 24px rgb(10 26 47 / 0.08);
+
+  --radius-sm: 0.875rem;
+  --radius-lg: 1.75rem;
+
+  --content-width: 88rem;
+}
+
+/* System theme, unless the user explicitly picked light mode */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #06121b;
+    --color-surface: #0b1d2b;
+    --color-surface-raised: #11293a;
+    --color-border: #1a3a4d;
+    --color-border-strong: #2a5670;
+
+    --color-text: #e8f4fb;
+    --color-text-muted: #8fb0c4;
+
+    --color-accent: #5fd3a5;
+    --color-accent-strong: #8be6c3;
+    --color-on-accent: #04170f;
+    --color-focus: #b7f0dc;
+    --color-glow: rgb(95 211 165 / 0.14);
+    --color-glow-focus: rgb(95 211 165 / 0.22);
+
+    --color-ok: #4ade9c;
+    --color-soon: #fbbf4a;
+    --color-overdue: #ff7a85;
+    --color-error-bg: #2a1418;
+    --color-error-border: #6b2a33;
+
+    --color-on-badge: #04120f;
+    --color-badge-itp: #7db3ff;
+    --color-badge-rca: #c9a8ff;
+    --color-badge-road-tax: #fbbf4a;
+    --color-badge-service: #4ade9c;
+
+    --color-accent-2: #6ea8ff;
+    --color-accent-3: #a9d6f5;
+    --color-accent-4: #ffd166;
+    --bg-opacity: 0.28;
+
+    --shadow-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 18px 40px -18px rgb(0 0 0 / 0.8);
+    --shadow-bar: 0 -10px 30px rgb(0 0 0 / 0.5);
+  }
+}
+
+/* Stage 5: the theme picked with the button wins over the system one */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #06121b;
+  --color-surface: #0b1d2b;
+  --color-surface-raised: #11293a;
+  --color-border: #1a3a4d;
+  --color-border-strong: #2a5670;
+
+  --color-text: #e8f4fb;
+  --color-text-muted: #8fb0c4;
+
+  --color-accent: #5fd3a5;
+  --color-accent-strong: #8be6c3;
+  --color-on-accent: #04170f;
+  --color-focus: #b7f0dc;
+  --color-glow: rgb(95 211 165 / 0.14);
+  --color-glow-focus: rgb(95 211 165 / 0.22);
+
+  --color-ok: #4ade9c;
+  --color-soon: #fbbf4a;
+  --color-overdue: #ff7a85;
+  --color-error-bg: #2a1418;
+  --color-error-border: #6b2a33;
+
+  --color-on-badge: #04120f;
+  --color-badge-itp: #7db3ff;
+  --color-badge-rca: #c9a8ff;
+  --color-badge-road-tax: #fbbf4a;
+  --color-badge-service: #4ade9c;
+
+  --color-accent-2: #6ea8ff;
+  --color-accent-3: #a9d6f5;
+  --color-accent-4: #ffd166;
+  --bg-opacity: 0.28;
+
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 18px 40px -18px rgb(0 0 0 / 0.8);
+  --shadow-bar: 0 -10px 30px rgb(0 0 0 / 0.5);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(60rem 28rem at 10% -6rem, color-mix(in srgb, var(--color-accent) 16%, transparent), transparent 70%),
+    radial-gradient(50rem 26rem at 95% 8%, color-mix(in srgb, var(--color-accent-3) 12%, transparent), transparent 70%),
+    radial-gradient(50rem 30rem at 50% 105%, color-mix(in srgb, var(--color-accent-2) 12%, transparent), transparent 70%),
+    var(--color-bg);
+  background-repeat: no-repeat;
+  color: var(--color-text);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  /* room for the bottom bar */
+  padding-bottom: 8rem;
+}
+
+/* Faded background picture, behind everything */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--bg-image) center / cover no-repeat;
+  opacity: var(--bg-opacity);
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgb(0 0 0 / 0.55) 100%);
+  mask-image: linear-gradient(180deg, #000 0%, rgb(0 0 0 / 0.55) 100%);
+}
+
+/* ---------- Shared classes ----------
+   Global styles only: variables, base elements and classes used by
+   more than one component. Component styles live in *.module.css. */
+
+a {
+  color: var(--color-accent);
+}
+
+/* A page section (form, list, detail) */
+.panel {
+  min-width: 0;
+  width: 100%;
+  scroll-margin-top: 1.5rem;
+}
+
+/* A white rounded box, used by the detail, about and 404 pages */
+.surface {
+  padding: 2.25rem 2.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.section-title::before {
+  content: "";
+  width: 0.5rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--color-accent), var(--color-accent-2) 60%, var(--color-accent-3));
+}
+
+/* Type label: common rules here, one color class per type below */
+.badge {
+  --badge: var(--color-accent);
+
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  background: var(--badge);
+  color: var(--color-on-badge);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.badge-itp {
+  --badge: var(--color-badge-itp);
+}
+
+.badge-rca {
+  --badge: var(--color-badge-rca);
+}
+
+.badge-road-tax {
+  --badge: var(--color-badge-road-tax);
+}
+
+.badge-service {
+  --badge: var(--color-badge-service);
+}
+
+.btn-danger {
+  padding: 0.4rem 1rem;
+  background: transparent;
+  color: var(--color-overdue);
+  border: 1px solid var(--color-overdue);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-danger:hover {
+  background: var(--color-overdue);
+  color: var(--color-on-accent);
+}
+
+/* ---------- Messages: empty list, loading, error ---------- */
+
+.empty {
+  margin: 0;
+  padding: 2rem;
+  text-align: center;
+  font-style: italic;
+  color: var(--color-text-muted);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+}
+
+.info {
+  margin: 0;
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+/* Spinner in front of the loading message */
+[data-testid="loading"]::before {
+  content: "";
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.75rem;
+  vertical-align: -0.15rem;
+  border: 2px solid var(--color-border-strong);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  color: var(--color-overdue);
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  border-radius: var(--radius-sm);
+}
+
+.error p {
+  margin: 0;
+}
+
+.btn-retry {
+  padding: 0.6rem 1.1rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--color-overdue);
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.btn-retry:hover {
+  background: var(--color-surface);
+}
+
+/* ---------- Keyboard focus, for every interactive element ---------- */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Respect reduced-motion settings ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  * {
+    transition: none !important;
+  }
+
+  [data-testid="loading"]::before {
+    animation: none;
+  }
+}

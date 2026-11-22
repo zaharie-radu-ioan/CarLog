@@ -1,0 +1,19 @@
+.notFound {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+/* Big faded "404" above the title */
+.code {
+  margin: 0 0 0.5rem;
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--color-border-strong);
+}
+
+.text {
+  margin: 0 0 1.25rem;
+  color: var(--color-text-muted);
+}

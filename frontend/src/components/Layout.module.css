@@ -1,0 +1,173 @@
+/* ---------- Header: compact top bar, logo on the far left ---------- */
+
+.header {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "logo title toggle"
+    "logo desc  toggle";
+  align-items: center;
+  row-gap: 0.125rem;
+  width: 100%;
+  margin: 0;
+  padding: 0.875rem clamp(1rem, 3vw, 2rem);
+  background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px -20px rgb(0 0 0 / 0.4);
+}
+
+/* Colorful strip along the bottom edge of the bar */
+.header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 3px;
+  background: var(--gradient);
+}
+
+.logo {
+  grid-area: logo;
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-right: 1rem;
+  border-radius: 50%;
+  background: var(--gradient-logo);
+  color: var(--color-on-accent);
+  box-shadow: 0 0 0 3px var(--color-surface), 0 0 0 5px color-mix(in srgb, var(--color-accent-2) 45%, transparent), 0 10px 22px -10px var(--color-accent-2);
+}
+
+.logo svg {
+  width: 62%;
+  height: 62%;
+}
+
+.title {
+  grid-area: title;
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.description {
+  grid-area: desc;
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+/* Light/dark switch, last column of the header */
+.themeToggle {
+  grid-area: toggle;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: 0.75rem;
+  padding: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.themeToggle svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.themeToggle:hover {
+  background: var(--color-surface-raised);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* ---------- The spot where every page is drawn ---------- */
+
+.main {
+  max-width: var(--content-width);
+  margin: 2.5rem auto 0;
+  padding: 0 2rem;
+}
+
+/* ---------- Footer: fixed bottom bar with the navigation ---------- */
+
+.footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.625rem 1.25rem;
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--color-border);
+  box-shadow: var(--shadow-bar);
+  text-align: center;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: 30rem;
+  margin: 0 auto;
+}
+
+.link {
+  flex: 1;
+  padding: 0.75rem 0.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.link:hover {
+  background: var(--color-surface-raised);
+  color: var(--color-accent);
+}
+
+/* The current page, marked by NavLink */
+.active {
+  background: var(--color-surface-raised);
+  color: var(--color-accent);
+  box-shadow: inset 0 -3px 0 var(--color-accent);
+}
+
+.note {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 700px) {
+  .header {
+    padding: 0.75rem 1rem;
+  }
+
+  .logo {
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: 0.75rem;
+  }
+
+  .main {
+    padding: 0 1.25rem;
+  }
+}

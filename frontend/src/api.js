@@ -1,4 +1,4 @@
-// All HTTP requests live here; components never call fetch directly.
+
 export const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3001";
 
 // Shared helper: sends JSON and throws if the response is not 2xx
@@ -10,7 +10,6 @@ async function request(path, options = {}) {
   if (!res.ok) {
     throw new Error(`Server error: ${res.status}`);
   }
-  // 204 No Content has no body
   return res.status === 204 ? null : res.json();
 }
 
@@ -20,6 +19,14 @@ export function fetchCars() {
 
 export function fetchReminders() {
   return request("/reminders");
+}
+
+export function fetchReminder(id) {
+  return request(`/reminders/${id}`);
+}
+
+export function fetchCar(id) {
+  return request(`/cars/${id}`);
 }
 
 export function createReminder(reminder) {

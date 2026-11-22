@@ -1,0 +1,142 @@
+/* The detail box, with the same status bar as the cards */
+.detail {
+  --status: var(--color-ok);
+
+  position: relative;
+  overflow: hidden;
+  max-width: 48rem;
+  margin: 0 auto;
+  padding-left: 3rem;
+}
+
+.detail::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.625rem;
+  background: var(--status);
+}
+
+.ok {
+  --status: var(--color-ok);
+}
+
+.soon {
+  --status: var(--color-soon);
+}
+
+.overdue {
+  --status: var(--color-overdue);
+}
+
+.done {
+  --status: var(--color-border-strong);
+}
+
+.back {
+  display: inline-block;
+  margin: 1rem 0 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* The back link is the first thing in the box: no space above it */
+.detail > .back:first-child {
+  margin-top: 0;
+}
+
+/* Title on the left, days on the right */
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.title {
+  margin: 0 0 0.75rem;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.done .title {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+.days {
+  flex-shrink: 0;
+  margin: 0;
+  text-align: right;
+  color: var(--color-text-muted);
+}
+
+.daysNumber {
+  display: block;
+  font-size: clamp(3rem, 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  color: var(--status);
+}
+
+/* Field names in the first column, values in the second */
+.fields {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.75rem 2rem;
+  margin: 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.fields dt {
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.fields dd {
+  margin: 0;
+}
+
+/* Same number plate look as in the garage */
+.plate {
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0a1a2f;
+  background: #ffffff;
+  border: 2px solid #0a1a2f;
+  border-left: 0.6rem solid #1d4ed8;
+  border-radius: 0.3rem;
+}
+
+@media (max-width: 700px) {
+  .detail {
+    padding: 1.5rem 1.25rem 1.5rem 2rem;
+  }
+
+  .head {
+    flex-direction: column;
+  }
+
+  .days {
+    text-align: left;
+  }
+
+  .fields {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .fields dd {
+    margin-bottom: 0.75rem;
+  }
+}

@@ -1,4 +1,5 @@
 import ReminderCard from "./ReminderCard.jsx";
+import styles from "./ReminderList.module.css";
 
 export default function ReminderList({ reminders, cars, onToggle, onDelete }) {
   if (reminders.length === 0) {
@@ -10,7 +11,7 @@ export default function ReminderList({ reminders, cars, onToggle, onDelete }) {
   }
 
   return (
-    <ul className="card-list">
+    <ul className={styles.list}>
       {reminders.map((reminder) => (
         <ReminderCard
           key={reminder.id}

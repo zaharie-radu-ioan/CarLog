@@ -1,0 +1,22 @@
+/* Deadline cards: two equal columns that fill the page */
+.list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 1.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* An odd last card stretches across so no hole is left in the grid */
+.list > li:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 900px) {
+  .list {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+  }
+}

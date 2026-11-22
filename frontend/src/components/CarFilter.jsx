@@ -1,17 +1,18 @@
 import { daysLeft, relativeDays } from "../utils/dates.js";
+import styles from "./CarFilter.module.css";
 
 export default function CarFilter({ cars, reminders, selected, onSelect }) {
   return (
-    <ul className="garage">
+    <ul className={styles.garage}>
       <li>
         <button
           type="button"
-          className="garage-car"
+          className={styles.car}
           aria-pressed={selected === "all"}
           onClick={() => onSelect("all")}
         >
-          <span className="garage-name">All cars</span>
-          <span className="garage-meta">{cars.length} in the garage</span>
+          <span className={styles.name}>All cars</span>
+          <span className={styles.meta}>{cars.length} in the garage</span>
         </button>
       </li>
 
@@ -25,16 +26,16 @@ export default function CarFilter({ cars, reminders, selected, onSelect }) {
           <li key={car.id}>
             <button
               type="button"
-              className="garage-car"
+              className={styles.car}
               aria-pressed={selected === car.id}
               onClick={() => onSelect(car.id)}
             >
-              <span className="garage-name">{car.name}</span>
-              <span className="garage-plate">{car.plate}</span>
-              <span className="garage-meta">
+              <span className={styles.name}>{car.name}</span>
+              <span className={styles.plate}>{car.plate}</span>
+              <span className={styles.meta}>
                 {car.year} · {car.fuel} · {car.km.toLocaleString("ro-RO")} km
               </span>
-              <span className="garage-next">
+              <span className={styles.next}>
                 {!next
                   ? "Nothing due"
                   : daysLeft(next.expires) < 0

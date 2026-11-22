@@ -1,11 +1,6 @@
 import { useState } from "react";
-
-const TYPES = [
-  { value: "itp", label: "ITP" },
-  { value: "rca", label: "RCA" },
-  { value: "rovinieta", label: "Road tax" },
-  { value: "revizie", label: "Service" },
-];
+import { TYPES } from "../constants.js";
+import styles from "./ReminderForm.module.css";
 
 const TITLE_MAX = 100;
 const YEAR_MIN = 2000;
@@ -66,10 +61,10 @@ export default function ReminderForm({ cars, onAdd }) {
   }
 
   return (
-    <form className="form" onSubmit={handleSubmit} noValidate data-testid="form">
-      <label className="form-label" htmlFor="title">Title</label>
+    <form className={styles.form} onSubmit={handleSubmit} noValidate data-testid="form">
+      <label className={styles.label} htmlFor="title">Title</label>
       <input
-        className="form-field"
+        className={styles.field}
         type="text"
         id="title"
         name="title"
@@ -81,9 +76,9 @@ export default function ReminderForm({ cars, onAdd }) {
         data-testid="form-title"
       />
 
-      <label className="form-label" htmlFor="car">Car</label>
+      <label className={styles.label} htmlFor="car">Car</label>
       <select
-        className="form-field"
+        className={styles.field}
         id="car"
         name="car"
         value={selectedCar}
@@ -97,9 +92,9 @@ export default function ReminderForm({ cars, onAdd }) {
         ))}
       </select>
 
-      <label className="form-label" htmlFor="type">Type</label>
+      <label className={styles.label} htmlFor="type">Type</label>
       <select
-        className="form-field"
+        className={styles.field}
         id="type"
         name="type"
         value={type}
@@ -111,9 +106,9 @@ export default function ReminderForm({ cars, onAdd }) {
         ))}
       </select>
 
-      <label className="form-label" htmlFor="date">Due date</label>
+      <label className={styles.label} htmlFor="date">Due date</label>
       <input
-        className="form-field"
+        className={styles.field}
         type="date"
         id="date"
         name="date"
@@ -123,12 +118,12 @@ export default function ReminderForm({ cars, onAdd }) {
       />
 
       {error && (
-        <p className="form-error" data-testid="form-error">
+        <p className={styles.error} data-testid="form-error">
           {error}
         </p>
       )}
 
-      <button className="button" type="submit" disabled={sending} data-testid="form-submit">
+      <button className={styles.button} type="submit" disabled={sending} data-testid="form-submit">
         {sending ? "Saving..." : "Add deadline"}
       </button>
     </form>

@@ -34,6 +34,7 @@ npm run dev   # terminal 2, http://localhost:5173
 ```
 
 Then open the address printed in the terminal (http://localhost:5173).
+Pages: `/` (deadlines), `/reminders/:id` (one deadline), `/about`; any other address shows the app's 404 page.
 The API address can be changed with `VITE_API_URL` (see `frontend/.env.example`).
 The Stage 1 and Stage 2 versions are in `mockup/`: open `mockup/index.html` in a browser, and the console (F12) for the data logic.
 
@@ -47,6 +48,7 @@ The Stage 1 and Stage 2 versions are in `mockup/`: open `mockup/index.html` in a
 | GitHub Copilot (VS Code)   | Stage 5: local state, toggle/delete events, light/dark theme                               |
 | Claude                     | Stage 6: `db.json`, `api.js`, loading/error states, status summary and car filter          |
 | Claude                     | Stage 7: `ReminderForm`, POST/PATCH/DELETE in `api.js`, `tw.json` and `data-testid`        |
+| Claude                     | Stage 8: React Router pages, `Layout`, detail page, splitting `App.css` into CSS Modules   |
 
 Details per stage: see the ai-log/ folder.
 
@@ -59,7 +61,8 @@ Details per stage: see the ai-log/ folder.
 - [x] Stage 5: local state and events
 - [x] Stage 6: data from a mock API
 - [x] Stage 7: form and validation
-- [ ] Stage 8: routing and detail page
+- [x] Stage 8: routing and detail page
+- [ ] Stage 9: own backend with Express
 
 ## Stage 1: static mockup
 
@@ -208,3 +211,33 @@ are the landmarks for the automatic check.
 | S7-R6 | tw.json and the data-testid attributes from table 7.3 | [`tw.json`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/tw.json), [`ReminderCard.jsx#L20-L66`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/frontend/src/components/ReminderCard.jsx#L20-L66), [`ReminderList.jsx#L6`](https://github.com/zaharie-radu-ioan/CarLog/blob/d00dbf474090afc6f2fdb194b021500f36be7a16/frontend/src/components/ReminderList.jsx#L6) | `querySelectorAll` in the console |
 | S7-R7 | README Stage 7 section + AI log | [`README.md#stage-7-form-and-validation`](./README.md#stage-7-form-and-validation), [`etapa-07.md`](./ai-log/etapa-07.md) | read |
 | S7-R8 | commit "Stage 7" pushed | [`d00dbf4`](https://github.com/zaharie-radu-ioan/CarLog/commit/d00dbf474090afc6f2fdb194b021500f36be7a16) | commit history |
+
+## Stage 8: routing and detail page
+
+The app now has four pages behind React Router, and the address changes without reloading the page:
+
+- `/`: the form and the list of deadlines (the stage 7 code, moved from `App` to `RemindersPage`);
+- `/reminders/:id`: one deadline, loaded from the server with its id from the address. Besides what the card shows, it has the full car details (year, fuel, mileage), the status in words, the notes and the id. For an id that does not exist (`/reminders/999`) it shows an error and a link back;
+- `/about`: a short description of the app;
+- any other address (`/ceva`): the app's own 404 page.
+
+The header and the bottom bar are written once, in `Layout`, and every page is drawn in its `<Outlet />`.
+The navigation stays in the bottom bar, like in a mobile app, with `NavLink` marking the current page.
+The title of each card is now a link to its detail page; the checkbox and the **Delete** button work as before.
+The counter moved from the header into the list section, because the header is now shared by every page.
+
+The styles moved next to their components, with CSS Modules (`*.module.css`). `App.css` became `index.css`
+and keeps only the color variables, the light/dark themes and the shared classes (`panel`, `surface`,
+`section-title`, `badge`, `btn-danger`, `info`, `error`, `empty`). The fixed values (deadline types and
+their labels) moved to `src/constants.js`.
+
+| ID    | Requirement | Where | How to check |
+| ----- | ----------- | ----- | ------------ |
+| S8-R1 | header navigation changes page without reload | [`App.jsx#L12-L19`](./frontend/src/App.jsx#L12-L19), [`Layout.jsx#L71-L82`](./frontend/src/components/Layout.jsx#L71-L82) | click the links, watch Network |
+| S8-R2 | click on an item opens its detail page | [`ReminderCard.jsx#L26`](./frontend/src/components/ReminderCard.jsx#L26), [`ReminderDetailPage.jsx`](./frontend/src/pages/ReminderDetailPage.jsx) | click a title |
+| S8-R3 | refresh on the detail URL works; missing id shows an error | [`ReminderDetailPage.jsx#L10-L65`](./frontend/src/pages/ReminderDetailPage.jsx#L10-L65), [`api.js#L25-L28`](./frontend/src/api.js#L25-L28) | refresh `/reminders/1`, open `/reminders/999` |
+| S8-R4 | unknown URL shows the app 404 page | [`App.jsx#L17`](./frontend/src/App.jsx#L17) (`path="*"`), [`NotFoundPage.jsx`](./frontend/src/pages/NotFoundPage.jsx) | open `/ceva` |
+| S8-R5 | each component has its `.module.css`; `index.css` only shared styles | [`src/components`](./frontend/src/components), [`src/pages`](./frontend/src/pages), [`index.css`](./frontend/src/index.css) | read |
+| S8-R6 | `data-testid` from tables 7.3 and 8.2; detail route `/reminders/:id` | [`Layout.jsx#L76`](./frontend/src/components/Layout.jsx#L76), [`ReminderCard.jsx#L13-L61`](./frontend/src/components/ReminderCard.jsx#L13-L61), [`ReminderDetailPage.jsx#L45-L76`](./frontend/src/pages/ReminderDetailPage.jsx#L45-L76), [`NotFoundPage.jsx#L7`](./frontend/src/pages/NotFoundPage.jsx#L7), [`tw.json`](./tw.json) | `querySelector` in the console |
+| S8-R7 | README Stage 8 section + AI log | [`README.md#stage-8-routing-and-detail-page`](./README.md#stage-8-routing-and-detail-page), [`etapa-08.md`](./ai-log/etapa-08.md) | read |
+| S8-R8 | commit "Stage 8" pushed | commit `Stage 8: routing and detail page` | commit history |

@@ -1,3 +1,5 @@
+import styles from "./StatusSummary.module.css";
+
 const TILES = [
   { value: "overdue", label: "Overdue" },
   { value: "soon", label: "Due in 30 days" },
@@ -6,17 +8,17 @@ const TILES = [
 
 export default function StatusSummary({ counts, selected, onSelect }) {
   return (
-    <div className="summary">
+    <div className={styles.summary}>
       {TILES.map((tile) => (
         <button
           key={tile.value}
           type="button"
-          className={`summary-tile summary-${tile.value}`}
+          className={`${styles.tile} ${styles[tile.value]}`}
           aria-pressed={selected === tile.value}
           onClick={() => onSelect(selected === tile.value ? "all" : tile.value)}
         >
-          <span className="summary-number">{counts[tile.value]}</span>
-          <span className="summary-label">{tile.label}</span>
+          <span className={styles.number}>{counts[tile.value]}</span>
+          <span className={styles.label}>{tile.label}</span>
         </button>
       ))}
     </div>

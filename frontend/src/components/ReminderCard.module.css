@@ -1,0 +1,210 @@
+/* One deadline card. The status color comes from --status,
+   set by one of the classes ok, soon, overdue or done. */
+.card {
+  --status: var(--color-ok);
+
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  min-height: 13rem;
+  overflow: hidden;
+  padding: 2.25rem 2.25rem 2.25rem 2.75rem;
+  background:
+    radial-gradient(26rem 14rem at 100% 0%, color-mix(in srgb, var(--status) 16%, transparent), transparent 70%),
+    var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  border-color: color-mix(in srgb, var(--status) 55%, var(--color-border));
+  transform: translateY(-3px);
+}
+
+/* Status bar on the left edge */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.625rem;
+  background: var(--status);
+}
+
+.ok {
+  --status: var(--color-ok);
+}
+
+.soon {
+  --status: var(--color-soon);
+}
+
+.overdue {
+  --status: var(--color-overdue);
+}
+
+/* Checkbox and text, side by side */
+.main {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.check {
+  flex-shrink: 0;
+  width: 1.375rem;
+  height: 1.375rem;
+  margin: 0.6rem 0 0;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.title {
+  margin: 0.25rem 0 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+/* The title is a link to the detail page */
+.titleLink {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.titleLink:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.car,
+.date {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+}
+
+.notes {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+/* Days left and the delete button, stacked on the right side */
+.side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+/* Days remaining: the number is the main thing on each card */
+.days {
+  flex-shrink: 0;
+  margin: 0;
+  text-align: right;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+}
+
+.daysNumber {
+  display: block;
+  font-size: clamp(3.5rem, 6vw, 4.75rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  color: var(--status);
+}
+
+/* Done: dimmed, struck-through, neutral status bar, "Finished" label */
+.done {
+  --status: var(--color-border-strong);
+
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  box-shadow: none;
+  opacity: 0.75;
+}
+
+.done:hover {
+  transform: none;
+  border-color: var(--color-border-strong);
+}
+
+.done::after {
+  content: "\2713  Finished";
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.25rem 0.75rem;
+  background: color-mix(in srgb, var(--color-ok) 16%, transparent);
+  color: var(--color-ok);
+  border: 1px solid color-mix(in srgb, var(--color-ok) 45%, transparent);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.done .titleLink,
+.done .date,
+.done .car {
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+/* .badge is a global class, so it is written with :global() */
+.done :global(.badge) {
+  opacity: 0.55;
+}
+
+.done .daysNumber {
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 700px) {
+  .card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+    padding: 1.75rem 1.5rem 1.75rem 2rem;
+  }
+
+  .days {
+    text-align: left;
+  }
+
+  /* Room above the title for the "Finished" label */
+  .done .main {
+    padding-top: 1.75rem;
+  }
+
+  .side {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover {
+    transform: none;
+  }
+}

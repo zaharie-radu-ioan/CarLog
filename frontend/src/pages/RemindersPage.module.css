@@ -1,0 +1,46 @@
+/* One big column: "Add a deadline", then "My deadlines" */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+/* Section title on the left, counter on the right */
+.listHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 1rem;
+}
+
+/* The counter, as a small pill */
+.count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0 0 1.5rem;
+  padding: 0.4rem 1rem;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.count::before {
+  content: "";
+  flex-shrink: 0;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: var(--color-accent-3);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent-3) 25%, transparent);
+}
+
+@media (max-width: 700px) {
+  .stack {
+    gap: 2.5rem;
+  }
+}

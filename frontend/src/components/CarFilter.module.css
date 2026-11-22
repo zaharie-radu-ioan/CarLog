@@ -1,0 +1,69 @@
+/* The garage: one button per car, filters the list by car */
+.garage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.car {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  min-width: 12rem;
+  height: 100%;
+  padding: 1rem 1.25rem;
+  font: inherit;
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-surface-raised);
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.car[aria-pressed="true"] {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+}
+
+.name {
+  font-weight: 700;
+}
+
+/* Romanian number plate: white, black border, blue strip on the left */
+.plate {
+  padding: 0.1rem 0.5rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0a1a2f;
+  background: #ffffff;
+  border: 2px solid #0a1a2f;
+  border-left: 0.6rem solid #1d4ed8;
+  border-radius: 0.3rem;
+}
+
+.meta {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.next {
+  font-size: 0.85rem;
+  color: var(--color-text);
+}
+
+@media (max-width: 700px) {
+  .car {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .garage li {
+    flex: 1 1 100%;
+  }
+}

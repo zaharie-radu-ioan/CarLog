@@ -1,0 +1,13 @@
+.about {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.about p {
+  margin: 0 0 1rem;
+}
+
+.about p:last-child {
+  margin-bottom: 0;
+  color: var(--color-text-muted);
+}
